@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Car Fare Calculator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>🚗 Car Fare Calculator</h1>
+    <p id="timeNow" class="time-display"></p>
+
+    <label for="kmInput">Enter distance (in kilometers):</label>
+    <input type="number" id="kmInput" placeholder="e.g., 120" min="0" />
+
+    <button onclick="showPrices()">Calculate Prices</button>
+
+    <div id="priceList" class="card-list"></div>
+    <div id="finalPrice" class="final-price"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
