@@ -1,0 +1,47 @@
+✅ 1. Frontend Prompts (User Interface + UX)
+🔹 Prompt 1: Render Real-Time Seat Layout with Status
+Fetch seat availability from /api/availability and display each seat with status-based coloring (available, booked, held). Disable interaction on non-available seats.
+
+🔹 Prompt 2: Connect to WebSocket for Live Seat Updates
+Establish a WebSocket connection to receive seatHeld, seatReleased, and seatBooked events. Update the seat map UI in real time when any event is received.
+
+🔹 Prompt 3: Implement Seat Hold with Countdown Timer
+On selecting a seat, call POST /api/hold-seats, start a 2-minute countdown timer, and visually indicate the hold. Release the seat automatically after expiry or on cancellation.
+
+🔹 Prompt 4: Handle Booking Confirmation and Conflicts
+On clicking “Confirm Booking,” call POST /api/confirm-booking. If a seat was already taken, show an error, deselect affected seats, and refresh the layout accordingly.
+
+🔹 Prompt 5: Mobile-Responsive and User Feedback Enhancements
+Ensure seat layout and modals are mobile-friendly. Add toast notifications for booking success, timeout, and errors. Provide visual cues for held and booked states.
+
+✅ 2. Backend Prompts (APIs + Business Logic)
+🔹 Prompt 1: Create API for Seat Availability
+Build GET /api/availability?busId=... to return the current status of all seats (available, held, booked). This API must respond quickly and support caching if needed.
+
+🔹 Prompt 2: Implement Seat Hold API with Expiry
+Create POST /api/hold-seats to allow users to temporarily reserve seats. Store hold expiry timestamp. Prevent multiple holds on the same seat.
+
+🔹 Prompt 3: Implement Booking Confirmation Endpoint
+Create POST /api/confirm-booking. Validate that all held seats are still valid and confirm the booking in a transactional way. On success, update seat status and notify clients.
+
+🔹 Prompt 4: Broadcast Seat Events via WebSocket
+After seat hold, release, or booking, emit a real-time event (e.g., seatBooked) to all connected clients. Use Socket.io or Pub/Sub system to push updates to frontend.
+
+🔹 Prompt 5: Add Automatic Seat Hold Expiry Logic
+Build a background task (e.g., cron or queue worker) that checks for expired holds every minute and automatically releases those seats, updating the database and sending socket events.
+
+✅ 3. Database Prompts (Schema + Constraints)
+🔹 Prompt 1: Add or Update seats Table
+Ensure the seats table includes: id, bus_id, number, status (available, held, booked), held_by, hold_expires_at. Add unique constraint on bus_id + number.
+
+🔹 Prompt 2: Create bookings Table with Relationships
+Define a bookings table with id, user_id, bus_id, seat_number, booking_time, and a foreign key to users. Add unique constraint on bus_id + seat_number to avoid duplicates.
+
+🔹 Prompt 3: Index Critical Fields for Performance
+Add indexes on seat.status, seat.hold_expires_at, booking.user_id, and booking.created_at to speed up queries for availability and user booking history.
+
+🔹 Prompt 4: Use Transactions for Booking Writes
+Ensure backend uses DB transactions to update seats.status and insert bookings in a single atomic step. Prevent race conditions and partial failures.
+
+🔹 Prompt 5: Log Booking Attempts for Auditing
+Create booking_logs table to store booking attempts with status, error_message, and timestamp. Use for tracking issues and generating reports.
